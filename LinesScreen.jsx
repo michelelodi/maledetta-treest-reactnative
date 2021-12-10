@@ -12,7 +12,8 @@ export default function LinesScreen({ navigation }) {
     if (line) navigation.navigate("Board");
     else
       new CommunicationController()
-        .getLines({ sid: sid }, (response) => setLines(response))
+        .getLines({ sid: sid })
+        .then((response) => setLines(response))
         .catch((error) => {
           console.log(error);
           //TODO non setLines(null) ma mostra all'utente un alertdialog con message "C'è stato un errore inaspettato sulla rete. Riprova più tardi"

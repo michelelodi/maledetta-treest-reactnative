@@ -11,14 +11,41 @@ export default function ShowLineScreen({ navigation }) {
   let { sid, line } = useContext(AppDataContext);
   let handleBack = useContext(DirectionContext);
   let [posts, setPosts] = useState(null);
+  let cc = new CommunicationController();
+
   useEffect(() => {
-    new CommunicationController()
-      .getPosts({ sid: sid, did: line.did }, (response) => setPosts(response))
+    cc.getPosts({ sid: sid, did: line.did })
+      .then((result) => {
+        let users = {};
+        result.map((el) => {
+          if (!users[el.author] && parseInt(el.pversion) > 0)
+            users[el.author] = el.pversion;
+        });
+        Object.keys(users).map((el) =>
+          cc
+            .getUserPicture({ sid: sid, uid: el })
+            .then((response) => {
+              let updatedPosts = result.slice();
+              updatedPosts.map((el, i) => {
+                if (
+                  el.author === response.uid &&
+                  el.pversion === response.pversion
+                ) {
+                  updatedPosts[i].picture = response.picture.slice(0, 30);
+                }
+              });
+              setPosts(updatedPosts);
+            })
+            .catch((error) => console.log(error))
+        );
+      })
       .catch((error) => console.log(error));
+
     return () => {
       console.log("UNMOUNTING SHOWLINE");
     };
   }, [sid, line.did, isFocused]);
+
   return (
     <View style={styles.flex1}>
       <Text>Hai selezionato la linea {line.lname}</Text>

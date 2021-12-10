@@ -10,14 +10,14 @@ export default class CommunicationController {
 
     let res = await this.instance.post(url + ".php", body);
     if (res.status === 200) return res["data"];
-    else return res.status;
+    else throw new Error("An error occurred. HTTP status: " + res.status);
   }
 
   async addPost(body) {
     return await this.baseRequest("addPost", body);
   }
 
-  async getLines(body, responseHandler) {
+  async getLines(body) {
     let res = await this.baseRequest("getLines", body);
     let lines = [];
     if (res["lines"]) {
@@ -42,28 +42,33 @@ export default class CommunicationController {
           ],
         });
       });
-      responseHandler(lines);
-    } else throw new Error("An error occurred. HTTP status: " + res);
+      return lines;
+    }
   }
 
-  async getPosts(body, responseHandler) {
+  async getPosts(body) {
     let res = await this.baseRequest("getPosts", body);
-    responseHandler(res["posts"]);
+    res["posts"].map((el, i) => {
+      res["posts"][i] = { ...el, upicture: "null" };
+    });
+    return res["posts"];
   }
 
-  async getProfile(body, responseHandler) {
-    let res = await this.baseRequest("getProfile", body);
-    responseHandler(res);
+  async getProfile(body) {
+    return await this.baseRequest("getProfile", body);
   }
 
-  async getStations(body, responseHandler) {
-    let res = await this.baseRequest("getStations", body);
-    responseHandler(res);
+  async getStations(body) {
+    return await this.baseRequest("getStations", body);
   }
 
-  async register(responseHandler) {
+  async getUserPicture(body) {
+    return await this.baseRequest("getUserPicture", body);
+  }
+
+  async register() {
     let res = await this.baseRequest("register", {});
-    responseHandler(res["sid"]);
+    return res["sid"];
   }
 
   async setProfile(body) {

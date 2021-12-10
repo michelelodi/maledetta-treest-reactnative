@@ -17,7 +17,9 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     let cc = new CommunicationController();
-    cc.getProfile({ sid: sid }, (response) => setUser(response));
+    cc.getProfile({ sid: sid })
+      .then((response) => setUser(response))
+      .catch((error) => console.log(error));
   }, [sid]);
 
   return user ? (
