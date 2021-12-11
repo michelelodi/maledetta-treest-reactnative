@@ -9,12 +9,26 @@ export default class CommunicationController {
     console.log("Handling " + url);
 
     let res = await this.instance.post(url + ".php", body);
-    if (res.status === 200) return res["data"];
-    else throw new Error("An error occurred. HTTP status: " + res.status);
+    switch (res.status) {
+      case 200:
+        return res["data"];
+      case 400:
+        throw new Error("HTTP error code 400: Invalid parameters");
+      case 401:
+        throw new Error("HTTP error code 401: Invalid session id");
+      case 200:
+        throw new Error("HTTP error code 413: parameters has too long data");
+      default:
+        throw new Error("An error occurred. HTTP status: " + res.status);
+    }
   }
 
   async addPost(body) {
     return await this.baseRequest("addPost", body);
+  }
+
+  async follow(body) {
+    return await this.baseRequest("follow", body);
   }
 
   async getLines(body) {
@@ -73,5 +87,9 @@ export default class CommunicationController {
 
   async setProfile(body) {
     return await this.baseRequest("setProfile", body);
+  }
+
+  async unfollow(body) {
+    return await this.baseRequest("unfollow", body);
   }
 }

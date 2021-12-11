@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { Text, View, StyleSheet, Button } from "react-native";
 import Posts from "./Posts";
-import CommunicationController from "./controller/CommunicationController";
+import ShowLineController from "./controller/ShowLineController";
 import { AppDataContext, DirectionContext } from "./AppContext";
 import SpinningWheel from "./SpinningWheel";
 
@@ -11,34 +11,11 @@ export default function ShowLineScreen({ navigation }) {
   let { sid, line } = useContext(AppDataContext);
   let handleBack = useContext(DirectionContext);
   let [posts, setPosts] = useState(null);
-  let cc = new CommunicationController();
 
   useEffect(() => {
-    cc.getPosts({ sid: sid, did: line.did })
-      .then((result) => {
-        let users = {};
-        result.map((el) => {
-          if (!users[el.author] && parseInt(el.pversion) > 0)
-            users[el.author] = el.pversion;
-        });
-        Object.keys(users).map((el) =>
-          cc
-            .getUserPicture({ sid: sid, uid: el })
-            .then((response) => {
-              let updatedPosts = result.slice();
-              updatedPosts.map((el, i) => {
-                if (
-                  el.author === response.uid &&
-                  el.pversion === response.pversion
-                ) {
-                  updatedPosts[i].picture = response.picture.slice(0, 30);
-                }
-              });
-              setPosts(updatedPosts);
-            })
-            .catch((error) => console.log(error))
-        );
-      })
+    new ShowLineController()
+      .setUpPosts({ sid: sid, did: line.did })
+      .then((result) => setPosts(result))
       .catch((error) => console.log(error));
 
     return () => {
@@ -50,7 +27,6 @@ export default function ShowLineScreen({ navigation }) {
     <View style={styles.flex1}>
       <Text>Hai selezionato la linea {line.lname}</Text>
       <Text>Lungo la tratta in direzione {line.sname}</Text>
-      <Text>L’ID della bacheca è {line.did}</Text>
       <View style={styles.container}>
         <Button
           style={styles.flex1}
