@@ -10,7 +10,7 @@ export default function ShowLineScreen({ navigation }) {
   let isFocused = useIsFocused();
   let { sid, line } = useContext(AppDataContext);
   let [posts, setPosts] = useState(null);
-  let revertDirection = useState(DirectionContext);
+  let revertDirection = useContext(DirectionContext);
 
   useEffect(() => {
     new ShowLineController()

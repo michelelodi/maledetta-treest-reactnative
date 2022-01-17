@@ -1,25 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { View, Text, Button, StyleSheet, TextInput, Image } from "react-native";
 import { AppDataContext } from "./AppContext";
 import CommunicationController from "./controller/CommunicationController";
 import SpinningWheel from "./SpinningWheel";
-import { handleEditProfileNamePress } from "./controller/ProfileController";
+import {
+  handleEditProfileNamePress,
+  handleEditProfilePicturePress,
+} from "./controller/ProfileController";
 
 export default function ProfileScreen() {
   let [user, setUser] = useState(null);
   let userName = null;
   let sid = useContext(AppDataContext)["sid"];
 
-  let handleEditProfilePicturePress = () => {
-    console.log("Button picture Pressed");
-    //TODO
-  };
-
   useEffect(() => {
-    let cc = new CommunicationController();
-    cc.getProfile({ sid: sid })
-      .then((response) => setUser(response))
-      .catch((error) => console.log(error));
+    if (sid) {
+      let cc = new CommunicationController();
+      cc.getProfile({ sid: sid })
+        .then((response) => setUser(response))
+        .catch((error) => console.log(error));
+    }
   }, [sid]);
 
   return user ? (
@@ -43,6 +43,13 @@ export default function ProfileScreen() {
         />
       </View>
       <View style={styles.container}>
+        <Image
+          style={{
+            width: 50,
+            height: 50,
+          }}
+          source={require("./assets/missingProfilePicture.png")}
+        />
         <Text style={styles.flex1}>picture:{user["picture"] + ""}</Text>
         <Button
           title={"Modifica"}

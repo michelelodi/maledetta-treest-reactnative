@@ -18,8 +18,6 @@ export default function LinesScreen({ navigation }) {
   let redirect = useContext(RedirectContext);
 
   useEffect(() => {
-    console.log(sid);
-    console.log(line);
     if (line && shouldRedirect) {
       redirect();
       navigation.navigate("Board");

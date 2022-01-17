@@ -13,7 +13,8 @@ export default function Post({ item, follow, revertFollow }) {
           );
         else if (item[k].length > 4) {
           try {
-            let base64Icon = item[k].replace(/\n/g, "");
+            if (item[k].startsWith("data:image/png;base64,"))
+              item[k] = item[k].substring(22);
             return (
               <View key={Date.now() + "" + i + Math.random()}>
                 <Image
@@ -23,7 +24,7 @@ export default function Post({ item, follow, revertFollow }) {
                     height: 50,
                     marginBottom: 5,
                   }}
-                  source={{ uri: "data:image/png;base64," + base64Icon }}
+                  source={{ uri: "data:image/png;base64," + item[k] }}
                 />
                 <Button
                   key={Date.now() + "" + i + Math.random()}
@@ -45,7 +46,7 @@ export default function Post({ item, follow, revertFollow }) {
                     height: 50,
                     marginBottom: 5,
                   }}
-                  source={require("./missingProfilePicture.png")}
+                  source={require("./assets/missingProfilePicture.png")}
                 />
                 <Button
                   key={Date.now() + "" + i + Math.random()}
@@ -67,7 +68,7 @@ export default function Post({ item, follow, revertFollow }) {
                   height: 50,
                   marginBottom: 5,
                 }}
-                source={require("./missingProfilePicture.png")}
+                source={require("./assets/missingProfilePicture.png")}
               />
               <Button
                 key={Date.now() + "" + i + Math.random()}
