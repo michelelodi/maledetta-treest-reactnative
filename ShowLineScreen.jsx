@@ -9,8 +9,8 @@ import SpinningWheel from "./SpinningWheel";
 export default function ShowLineScreen({ navigation }) {
   let isFocused = useIsFocused();
   let { sid, line } = useContext(AppDataContext);
-  let handleBack = useContext(DirectionContext);
   let [posts, setPosts] = useState(null);
+  let revertDirection = useState(DirectionContext);
 
   useEffect(() => {
     new ShowLineController()
@@ -30,18 +30,10 @@ export default function ShowLineScreen({ navigation }) {
       <View style={styles.container}>
         <Button
           style={styles.flex1}
-          title="BACK"
-          onPress={() => {
-            handleBack(null);
-            navigation.navigate("Lines");
-          }}
-        />
-        <Button
-          style={styles.flex1}
           title="REVERT"
           onPress={() => {
             setPosts(null);
-            handleBack({
+            revertDirection({
               lname: line.lname,
               sname: line.reverseSname,
               did: line.reverseDid,
