@@ -9,13 +9,6 @@ export default function Posts({ data }) {
   let cc = new CommunicationController();
   let [follow, setFollow] = useState(initFollow());
 
-  let following = [];
-  let notFollowing = [];
-  data.forEach((el) => {
-    el["followingAuthor"] ? following.push(el) : notFollowing.push(el);
-  });
-  data = following.concat(notFollowing);
-
   function initFollow() {
     return Object.fromEntries(
       data.map((el) => {

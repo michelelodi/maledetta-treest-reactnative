@@ -1,24 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput, Image } from "react-native";
-import { AppDataContext } from "./AppContext";
-import CommunicationController from "./controller/CommunicationController";
+import { AppDataContext, ProfileContext } from "./AppContext";
 import SpinningWheel from "./SpinningWheel";
 import {
   handleEditProfileNamePress,
   handleEditProfilePicturePress,
+  initProfileData,
 } from "./controller/ProfileController";
 
 export default function ProfileScreen() {
   let [user, setUser] = useState(null);
   let userName = null;
   let sid = useContext(AppDataContext)["sid"];
+  let profileData = useContext(ProfileContext);
 
   useEffect(() => {
     if (sid) {
-      let cc = new CommunicationController();
-      cc.getProfile({ sid: sid })
-        .then((response) => setUser(response))
-        .catch((error) => console.log(error));
+      if (!profileData["uid"]) {
+        initProfileData(sid)
+          .then((response) => {
+            profileData.editProfileData({ ...profileData, ...response });
+            setUser(response);
+          })
+          .catch((error) => console.log(error));
+      } else {
+        setUser({
+          uid: profileData["uid"],
+          name: profileData["name"],
+          pversion: profileData["pversion"],
+        });
+      }
     }
   }, [sid]);
 
