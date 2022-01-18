@@ -1,25 +1,23 @@
 import CommunicationController from "./CommunicationController";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
+import StorageManager from "../model/StorageManager";
 
 var cc = new CommunicationController();
+var sm = new StorageManager();
 
 export let handleEditProfileNamePress = async (userName, sid) => {
   if (userName && userName.length > 0) {
     if (userName.length < 20) {
-      cc.setProfile({ sid: sid, name: userName })
-        .then(() => {
-          return true;
-        })
-        .catch((e) => {
-          console.log(e);
-          return false;
-        });
+      await cc.setProfile({ sid: sid, name: userName });
+      await AsyncStorage.setItem("name", userName);
+      return;
     } else console.log("User entered a too long name");
   } else console.log("User entered an empty name");
 };
 
-export let handleEditProfilePicturePress = async () => {
+export let handleEditProfilePicturePress = async (uid, pversion) => {
   let permissionResult =
     await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -28,8 +26,15 @@ export let handleEditProfilePicturePress = async () => {
     return;
   }
 
-  let pickerResult = await ImagePicker.launchImageLibraryAsync();
-  console.log(pickerResult);
+  let picture = await ImagePicker.launchImageLibraryAsync();
+  let base64 = await FileSystem.readAsStringAsync(picture.uri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  await sm.storeUserPicture(uid, parseInt(pversion) + 1 + "", base64);
+  await AsyncStorage.setItem("pversion", parseInt(pversion) + 1 + "");
+  return {
+    uri: "data:image/png;base64," + base64,
+  };
 };
 
 export let initProfileData = async (sid) => {
@@ -49,4 +54,9 @@ export let initProfileData = async (sid) => {
       name: profileData["name"],
     };
   }
+};
+
+export let getProfilePictureAsync = async (uid) => {
+  let picture = await sm.getUserPicture(uid);
+  return { uri: "data:image/png;base64," + picture["picture"] };
 };

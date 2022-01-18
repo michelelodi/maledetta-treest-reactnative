@@ -23,7 +23,8 @@
     "react-native-base64": "^0.2.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
-    "expo-image-picker": "~11.0.3"
+    "expo-image-picker": "~11.0.3",
+    "expo-file-system": "~13.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -5,56 +5,62 @@ import LinesScreen from "./LinesScreen";
 import ProfileScreen from "./ProfileScreen";
 import ShowLineScreen from "./ShowLineScreen";
 import AddPostScreen from "./AddPostScreen";
-import { ProfileContext } from "./AppContext";
+import { ProfileContext, UpdateProfileContext } from "./AppContext";
 
 export default function NavigationContainer() {
   let [profileData, setProfileData] = useState({
-    uid: null,
-    pversion: null,
     name: null,
-    editProfileData: (data) => setProfileData(data),
+    pversion: null,
+    uid: null,
+    picture: null,
   });
 
   return (
-    <NC>
-      <ProfileContext.Provider value={profileData}>
-        <Tab.Navigator
-          screenOptions={{ headerShown: false, unmountOnBlur: true }}
-        >
-          <Tab.Screen name="Home">
-            {() => (
-              <HomeStack.Navigator>
-                <HomeStack.Screen
-                  name="Lines"
-                  component={LinesScreen}
-                  options={{ title: "Home" }}
-                />
-                <HomeStack.Screen
-                  name="Board"
-                  component={ShowLineScreen}
-                  options={{ title: "Bacheca" }}
-                />
-                <HomeStack.Screen
-                  name="Post"
-                  component={AddPostScreen}
-                  options={{ title: "Aggiungi un Post" }}
-                />
-              </HomeStack.Navigator>
-            )}
-          </Tab.Screen>
-          <Tab.Screen name="User">
-            {() => (
-              <UserStack.Navigator>
-                <UserStack.Screen
-                  name="Profile"
-                  component={ProfileScreen}
-                  options={{ title: "Profile" }}
-                />
-              </UserStack.Navigator>
-            )}
-          </Tab.Screen>
-        </Tab.Navigator>
-      </ProfileContext.Provider>
-    </NC>
+    <ProfileContext.Provider value={profileData}>
+      <UpdateProfileContext.Provider
+        value={(data) => {
+          setProfileData(data);
+        }}
+      >
+        <NC>
+          <Tab.Navigator
+            screenOptions={{ headerShown: false, unmountOnBlur: true }}
+          >
+            <Tab.Screen name="Home">
+              {() => (
+                <HomeStack.Navigator>
+                  <HomeStack.Screen
+                    name="Lines"
+                    component={LinesScreen}
+                    options={{ title: "Home" }}
+                  />
+                  <HomeStack.Screen
+                    name="Board"
+                    component={ShowLineScreen}
+                    options={{ title: "Bacheca" }}
+                  />
+                  <HomeStack.Screen
+                    name="Post"
+                    component={AddPostScreen}
+                    options={{ title: "Aggiungi un Post" }}
+                  />
+                </HomeStack.Navigator>
+              )}
+            </Tab.Screen>
+            <Tab.Screen name="User">
+              {() => (
+                <UserStack.Navigator>
+                  <UserStack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{ title: "Profile" }}
+                  />
+                </UserStack.Navigator>
+              )}
+            </Tab.Screen>
+          </Tab.Navigator>
+        </NC>
+      </UpdateProfileContext.Provider>
+    </ProfileContext.Provider>
   );
 }
