@@ -3,7 +3,12 @@ import { useIsFocused } from "@react-navigation/native";
 import { Text, View, StyleSheet, Button } from "react-native";
 import Posts from "./Posts";
 import ShowLineController from "./controller/ShowLineController";
-import { AppDataContext, DirectionContext } from "./AppContext";
+import {
+  AppDataContext,
+  DirectionContext,
+  StationsContext,
+  UpdateStationsContext,
+} from "./AppContext";
 import SpinningWheel from "./SpinningWheel";
 
 export default function ShowLineScreen({ navigation }) {
@@ -11,12 +16,15 @@ export default function ShowLineScreen({ navigation }) {
   let { sid, line } = useContext(AppDataContext);
   let [posts, setPosts] = useState(null);
   let revertDirection = useContext(DirectionContext);
+  let stations = useContext(StationsContext);
+  let updateStations = useContext(UpdateStationsContext);
+  let sc = new ShowLineController();
 
   useEffect(() => {
-    new ShowLineController()
-      .setUpPosts({ sid: sid, did: line.did })
-      .then((result) => setPosts(result))
-      .catch((error) => console.log(error));
+    if (isFocused)
+      sc.setUpPosts({ sid: sid, did: line.did })
+        .then((result) => setPosts(result))
+        .catch((error) => console.log(error));
 
     return () => {
       console.log("UNMOUNTING SHOWLINE");
@@ -47,6 +55,18 @@ export default function ShowLineScreen({ navigation }) {
           title="ADD POST"
           onPress={() => {
             navigation.navigate("Post");
+          }}
+        />
+        <Button
+          style={styles.flex1}
+          title="SHOW MAP"
+          onPress={() => {
+            sc.handleStationsToShow({ sid: sid, did: line.did }, stations)
+              .then((response) => {
+                if (response) updateStations(response);
+                navigation.navigate("Map");
+              })
+              .catch((error) => console.log(error));
           }}
         />
       </View>

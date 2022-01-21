@@ -5,7 +5,13 @@ import LinesScreen from "./LinesScreen";
 import ProfileScreen from "./ProfileScreen";
 import ShowLineScreen from "./ShowLineScreen";
 import AddPostScreen from "./AddPostScreen";
-import { ProfileContext, UpdateProfileContext } from "./AppContext";
+import MapScreen from "./MapScreen";
+import {
+  ProfileContext,
+  UpdateProfileContext,
+  StationsContext,
+  UpdateStationsContext,
+} from "./AppContext";
 
 export default function NavigationContainer() {
   let [profileData, setProfileData] = useState({
@@ -15,6 +21,8 @@ export default function NavigationContainer() {
     picture: null,
   });
 
+  let [stations, setStations] = useState({});
+
   return (
     <ProfileContext.Provider value={profileData}>
       <UpdateProfileContext.Provider
@@ -22,44 +30,55 @@ export default function NavigationContainer() {
           setProfileData(data);
         }}
       >
-        <NC>
-          <Tab.Navigator
-            screenOptions={{ headerShown: false, unmountOnBlur: true }}
+        <StationsContext.Provider value={stations}>
+          <UpdateStationsContext.Provider
+            value={(updatedStations) => setStations(updatedStations)}
           >
-            <Tab.Screen name="Home">
-              {() => (
-                <HomeStack.Navigator>
-                  <HomeStack.Screen
-                    name="Lines"
-                    component={LinesScreen}
-                    options={{ title: "Home" }}
-                  />
-                  <HomeStack.Screen
-                    name="Board"
-                    component={ShowLineScreen}
-                    options={{ title: "Bacheca" }}
-                  />
-                  <HomeStack.Screen
-                    name="Post"
-                    component={AddPostScreen}
-                    options={{ title: "Aggiungi un Post" }}
-                  />
-                </HomeStack.Navigator>
-              )}
-            </Tab.Screen>
-            <Tab.Screen name="User">
-              {() => (
-                <UserStack.Navigator>
-                  <UserStack.Screen
-                    name="Profile"
-                    component={ProfileScreen}
-                    options={{ title: "Profile" }}
-                  />
-                </UserStack.Navigator>
-              )}
-            </Tab.Screen>
-          </Tab.Navigator>
-        </NC>
+            <NC>
+              <Tab.Navigator
+                screenOptions={{ headerShown: false, unmountOnBlur: true }}
+              >
+                <Tab.Screen name="Home">
+                  {() => (
+                    <HomeStack.Navigator>
+                      <HomeStack.Screen
+                        name="Lines"
+                        component={LinesScreen}
+                        options={{ title: "Home" }}
+                      />
+                      <HomeStack.Screen
+                        name="Board"
+                        component={ShowLineScreen}
+                        options={{ title: "Board" }}
+                      />
+                      <HomeStack.Screen
+                        name="Post"
+                        component={AddPostScreen}
+                        options={{ title: "Add a post" }}
+                      />
+                      <HomeStack.Screen
+                        name="Map"
+                        component={MapScreen}
+                        options={{ title: "Show line on map" }}
+                      />
+                    </HomeStack.Navigator>
+                  )}
+                </Tab.Screen>
+                <Tab.Screen name="User">
+                  {() => (
+                    <UserStack.Navigator>
+                      <UserStack.Screen
+                        name="Profile"
+                        component={ProfileScreen}
+                        options={{ title: "Profile" }}
+                      />
+                    </UserStack.Navigator>
+                  )}
+                </Tab.Screen>
+              </Tab.Navigator>
+            </NC>
+          </UpdateStationsContext.Provider>
+        </StationsContext.Provider>
       </UpdateProfileContext.Provider>
     </ProfileContext.Provider>
   );

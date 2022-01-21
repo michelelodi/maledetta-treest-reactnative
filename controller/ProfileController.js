@@ -30,6 +30,7 @@ export let handleEditProfilePicturePress = async (uid, pversion) => {
   let base64 = await FileSystem.readAsStringAsync(picture.uri, {
     encoding: FileSystem.EncodingType.Base64,
   });
+  await cc.setProfile({ sid: sid, picture: base64 });
   await sm.storeUserPicture(uid, parseInt(pversion) + 1 + "", base64);
   await AsyncStorage.setItem("pversion", parseInt(pversion) + 1 + "");
   return {

@@ -2,9 +2,11 @@ import CommunicationController from "./CommunicationController";
 import StorageManager from "../model/StorageManager";
 
 export default class ShowLineController {
+  cc = new CommunicationController();
+
   async setUpPosts(requestBody) {
     let sm = new StorageManager();
-    let posts = await new CommunicationController().getPosts(requestBody);
+    let posts = await this.cc.getPosts(requestBody);
     let users = {};
     posts.map((el) => {
       if (!users[el.author] && parseInt(el.pversion) > 0)
@@ -16,7 +18,7 @@ export default class ShowLineController {
           let userPicture = await sm.getUserPicture(uid);
 
           if (!userPicture) {
-            userPicture = await new CommunicationController().getUserPicture({
+            userPicture = await this.cc.getUserPicture({
               sid: requestBody.sid,
               uid: uid,
             });
@@ -27,7 +29,7 @@ export default class ShowLineController {
               userPicture.picture
             );
           } else if (parseInt(userPicture.pversion) !== parseInt(users[uid])) {
-            userPicture = await new CommunicationController().getUserPicture({
+            userPicture = await this.cc.getUserPicture({
               sid: requestBody.sid,
               uid: uid,
             });
@@ -55,5 +57,12 @@ export default class ShowLineController {
       return updatedPosts[updatedPosts.length - 1];
     }
     return posts;
+  }
+
+  async handleStationsToShow(requestBody, stations) {
+    if (stations[requestBody.did]) return false;
+    requestedStations = await this.cc.getStations(requestBody);
+    stations[requestBody.did] = requestedStations["stations"];
+    return stations;
   }
 }
