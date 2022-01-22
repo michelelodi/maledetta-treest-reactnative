@@ -19,6 +19,7 @@ export default function MapScreen() {
         setLocationPermissions(response);
       })
       .catch((error) => console.log(error));
+    return () => setLocationPermissions(false);
   }, []);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function MapScreen() {
       showsMyLocationButton={locationPermissions && cameraIdle}
       initialRegion={region}
       moveOnMarkerPress={false}
+      tintColor="#04C4D9"
       onRegionChange={() => {
         setCameraIdle(false);
         setMarkers([]);
@@ -65,6 +67,7 @@ export default function MapScreen() {
         }))}
         lineDashPattern={[0]}
         strokeWidth={2}
+        strokeColor="#04C4D9"
       />
       {markers.map((st) => {
         return (

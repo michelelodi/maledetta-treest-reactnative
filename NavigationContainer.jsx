@@ -6,12 +6,39 @@ import ProfileScreen from "./ProfileScreen";
 import ShowLineScreen from "./ShowLineScreen";
 import AddPostScreen from "./AddPostScreen";
 import MapScreen from "./MapScreen";
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import {
   ProfileContext,
   UpdateProfileContext,
   StationsContext,
   UpdateStationsContext,
 } from "./AppContext";
+import { Image, Text, View } from "react-native";
+import { fontStyles } from "./TreEstStyles";
+import { useFonts, Raleway_700Bold } from "@expo-google-fonts/raleway";
+
+function LogoTitle() {
+  let [fontsLoaded] = useFonts({
+    Raleway_700Bold,
+  });
+  return fontsLoaded ? (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <Image
+        style={{ width: 40, height: 40, marginRight: 8 }}
+        source={require("./assets/icon.png")}
+      />
+      <Text style={fontStyles.headerLogo}>{"TreEst"}</Text>
+    </View>
+  ) : (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <Image
+        style={{ width: 50, height: 50 }}
+        source={require("./assets/icon.png")}
+      />
+    </View>
+  );
+}
 
 export default function NavigationContainer() {
   let [profileData, setProfileData] = useState({
@@ -36,7 +63,30 @@ export default function NavigationContainer() {
           >
             <NC>
               <Tab.Navigator
-                screenOptions={{ headerShown: false, unmountOnBlur: true }}
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === "Home") {
+                      iconName = (
+                        <Ionicons
+                          name="subway-outline"
+                          size={size}
+                          color={color}
+                        />
+                      );
+                    } else if (route.name === "User") {
+                      iconName = (
+                        <Feather name="user" size={size} color={color} />
+                      );
+                    }
+                    return iconName;
+                  },
+                  tabBarActiveTintColor: "#04C4D9",
+                  tabBarInactiveTintColor: "#272559",
+                  headerShown: false,
+                  unmountOnBlur: true,
+                })}
               >
                 <Tab.Screen name="Home">
                   {() => (
@@ -44,22 +94,34 @@ export default function NavigationContainer() {
                       <HomeStack.Screen
                         name="Lines"
                         component={LinesScreen}
-                        options={{ title: "Home" }}
+                        options={{
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          contentStyle: { backgroundColor: "white" },
+                        }}
                       />
                       <HomeStack.Screen
                         name="Board"
                         component={ShowLineScreen}
-                        options={{ title: "Board" }}
+                        options={{
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          contentStyle: { backgroundColor: "white" },
+                        }}
                       />
                       <HomeStack.Screen
                         name="Post"
                         component={AddPostScreen}
-                        options={{ title: "Add a post" }}
+                        options={{
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          contentStyle: { backgroundColor: "white" },
+                        }}
                       />
                       <HomeStack.Screen
                         name="Map"
                         component={MapScreen}
-                        options={{ title: "Show line on map" }}
+                        options={{
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          contentStyle: { backgroundColor: "white" },
+                        }}
                       />
                     </HomeStack.Navigator>
                   )}
@@ -70,7 +132,10 @@ export default function NavigationContainer() {
                       <UserStack.Screen
                         name="Profile"
                         component={ProfileScreen}
-                        options={{ title: "Profile" }}
+                        options={{
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          contentStyle: { backgroundColor: "white" },
+                        }}
                       />
                     </UserStack.Navigator>
                   )}

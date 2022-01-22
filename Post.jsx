@@ -3,7 +3,9 @@ import { View, Text, Image, Button } from "react-native";
 
 export default function Post({ item, follow, revertFollow }) {
   return (
-    <View style={{ borderWidth: 1, padding: 5 }}>
+    <View
+      style={{ borderRadius: 2, elevation: 2, padding: 8, marginBottom: 8 }}
+    >
       {Object.keys(item).map((k, i) => {
         if (k != "upicture")
           return (

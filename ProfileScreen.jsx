@@ -1,11 +1,19 @@
 import React, { useContext, useEffect } from "react";
-import { View, Button, StyleSheet, TextInput, Image } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image } from "react-native";
+import {
+  useFonts,
+  Roboto_700Bold,
+  Roboto_400Regular,
+} from "@expo-google-fonts/roboto";
+import { fontStyles } from "./TreEstStyles";
 import {
   AppDataContext,
   ProfileContext,
   UpdateProfileContext,
 } from "./AppContext";
 import SpinningWheel from "./SpinningWheel";
+import PrimaryButton from "./view/PrimaryButton";
+import SecondaryButton from "./view/SecondaryButton";
 import {
   handleEditProfileNamePress,
   handleEditProfilePicturePress,
@@ -18,6 +26,10 @@ export default function ProfileScreen() {
   let sid = useContext(AppDataContext)["sid"];
   let profileData = useContext(ProfileContext);
   let updateProfileContext = useContext(UpdateProfileContext);
+  let [fontsLoaded] = useFonts({
+    Roboto_700Bold,
+    Roboto_400Regular,
+  });
 
   useEffect(() => {
     if (sid) {
@@ -49,46 +61,73 @@ export default function ProfileScreen() {
         .catch((error) => console.log(error));
   }, [profileData["uid"]]);
 
-  return profileData ? (
+  return profileData && fontsLoaded ? (
     <View>
-      <View style={styles.container}>
-        <TextInput
-          style={styles.flex1}
-          placeholder={profileData["name"]}
-          onChangeText={(userNameText) => {
-            userName = userNameText;
-          }}
-        ></TextInput>
-        <Button
-          title={"Modifica"}
-          onPress={() => {
-            handleEditProfileNamePress(userName, sid, () => {})
-              .then((_) => {
-                updateProfileContext({ ...profileData, name: userName });
-              })
-              .catch((error) => console.log(error));
-          }}
-          style={styles.flex2}
-        />
-      </View>
-      <View>
+      <View style={{ alignItems: "center" }}>
         <Image
           style={{
-            width: 50,
-            height: 50,
+            width: 116,
+            height: 116,
+            borderRadius: 8,
+            marginTop: 40,
           }}
           source={profileData["picture"]}
         />
-        <Button
-          title={"Modifica"}
+        <SecondaryButton
+          title={"Edit"}
           onPress={() => {
-            handleEditProfilePicturePress(profileData.uid, profileData.pversion)
+            handleEditProfilePicturePress(
+              profileData.uid,
+              profileData.pversion,
+              sid
+            )
               .then((response) => {
                 updateProfileData({
                   ...profileData,
                   pversion: parseInt(profileData["pversion"]) + 1 + "",
                   picture: response,
                 });
+              })
+              .catch((error) => console.log(error));
+          }}
+          iconName={"camera"}
+        />
+      </View>
+      <View style={{ marginTop: 10, alignItems: "center" }}>
+        <View
+          style={{
+            padding: 30,
+          }}
+        >
+          <Text style={{ marginBottom: 4, ...fontStyles.textInputLabel }}>
+            {"Username"}
+          </Text>
+          <TextInput
+            placeholder={profileData["name"]}
+            placeholderTextColor={"black"}
+            onChangeText={(userNameText) => {
+              userName = userNameText;
+            }}
+            style={{
+              borderBottomColor: "#04C4D9",
+              borderBottomWidth: 2,
+              padding: 10,
+              backgroundColor: "#EEFAFC",
+              borderRadius: 4,
+            }}
+          ></TextInput>
+          <Text style={{ marginTop: 4, ...fontStyles.textInputDescription }}>
+            {
+              "Choose a username 6-20 characters long. Your username can be any combination of letters, numbers, or symbols."
+            }
+          </Text>
+        </View>
+        <PrimaryButton
+          title={"SAVE"}
+          onPress={() => {
+            handleEditProfileNamePress(userName, sid, () => {})
+              .then((_) => {
+                updateProfileContext({ ...profileData, name: userName });
               })
               .catch((error) => console.log(error));
           }}

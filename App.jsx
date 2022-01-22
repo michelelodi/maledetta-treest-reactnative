@@ -8,6 +8,7 @@ import {
 import { appSetUp, saveCurrentLine } from "./controller/AppController";
 import NavigationContainer from "./NavigationContainer";
 import SpinningWheel from "./SpinningWheel";
+import { Image, View } from "react-native";
 
 export default function App() {
   let [line, setLine] = useState(null);
@@ -34,7 +35,7 @@ export default function App() {
     };
   }, []);
 
-  return sid ? (
+  return sid && (line || lines) ? (
     <AppDataContext.Provider value={appData}>
       <DirectionContext.Provider
         value={(line) => {

@@ -17,7 +17,7 @@ export let handleEditProfileNamePress = async (userName, sid) => {
   } else console.log("User entered an empty name");
 };
 
-export let handleEditProfilePicturePress = async (uid, pversion) => {
+export let handleEditProfilePicturePress = async (uid, pversion, sid) => {
   let permissionResult =
     await ImagePicker.requestMediaLibraryPermissionsAsync();
 
