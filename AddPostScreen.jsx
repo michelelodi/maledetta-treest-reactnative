@@ -52,7 +52,7 @@ export default function AddPostScreen({ navigation }) {
   return (
     <View style={{ padding: 24 }}>
       <Text style={fontStyles.title}>{"Rate the line:"}</Text>
-      {/* status component */}
+      {/* comment component */}
       <View
         style={{ marginBottom: 16, padding: 8, elevation: 1, borderRadius: 2 }}
       >

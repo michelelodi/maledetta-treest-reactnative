@@ -40,13 +40,21 @@ export default function ShowLineScreen({ navigation }) {
   }, [sid, line.did, isFocused]);
 
   return fontsLoaded ? (
-    <View style={{ padding: 16 }}>
+    <View
+      style={{
+        paddingTop: 16,
+        paddingLeft: 16,
+        paddingRight: 16,
+        marginBottom: 160,
+      }}
+    >
       <View
         style={{
-          borderRadius: 2,
+          borderRadius: 4,
           elevation: 2,
           padding: 16,
           marginBottom: 24,
+          shadowColor: "#F2C641",
         }}
       >
         <View

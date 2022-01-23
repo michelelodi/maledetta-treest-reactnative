@@ -50,4 +50,18 @@ export let fontStyles = StyleSheet.create({
     fontSize: 40,
     color: "#272559",
   },
+  authorName: {
+    fontSize: 14,
+    fontFamily: "Roboto_700Bold",
+  },
+  postDate: {
+    fontSize: 10,
+    fontFamily: "Roboto_700Bold",
+    color: "#9695AB",
+  },
+  comment: {
+    fontFamily: "Roboto_400Regular",
+    fontSize: 14,
+    color: "#272559",
+  },
 });

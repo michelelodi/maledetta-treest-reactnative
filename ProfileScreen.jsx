@@ -62,14 +62,13 @@ export default function ProfileScreen() {
   }, [profileData["uid"]]);
 
   return profileData && fontsLoaded ? (
-    <View>
+    <View style={{ padding: 24 }}>
       <View style={{ alignItems: "center" }}>
         <Image
           style={{
             width: 116,
             height: 116,
             borderRadius: 8,
-            marginTop: 40,
           }}
           source={profileData["picture"]}
         />
@@ -93,10 +92,14 @@ export default function ProfileScreen() {
           iconName={"camera"}
         />
       </View>
-      <View style={{ marginTop: 10, alignItems: "center" }}>
+      <View style={{ marginTop: 24, alignItems: "center" }}>
         <View
           style={{
             padding: 30,
+            borderRadius: 2,
+            elevation: 5,
+            shadowColor: "#F2C641",
+            marginBottom: 56,
           }}
         >
           <Text style={{ marginBottom: 4, ...fontStyles.textInputLabel }}>

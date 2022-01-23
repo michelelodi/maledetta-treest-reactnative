@@ -109,6 +109,7 @@ let styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
+    shadowColor: "#F2C641",
   },
   flex2: {
     flex: 2,
